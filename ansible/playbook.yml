@@ -1,0 +1,16 @@
+name: Build, Push and Run Docker image for the Python application
+host: localhost
+become: no
+
+vars:
+  image_name: "bbebin/python-app"
+  image_tag: "0.3"
+  listen_port: "{{ default_listen_port | default(5000) }}"
+
+tasks:
+  - name: Create application directory
+    file:
+      path: "/app" 
+      state: directory
+      mode: 0755
+
