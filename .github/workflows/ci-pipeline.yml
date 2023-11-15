@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.X"]
+      env:
         app_directory: "./app"
     steps:
       - name: Checkout code
