@@ -39,5 +39,6 @@ jobs:
           version: 0.28.1
 
       - name: Execute unit-test
+        working-directory: './app'
         run: |
-          python -m unittest './app/app_test.py'
+          python -m unittest './app_test.py'
