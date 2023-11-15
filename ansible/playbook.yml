@@ -5,7 +5,7 @@
   vars:
     image_name: "bbebin/python-app"
     image_tag: "0.3"
-    app_directory: "/app"
+    app_directory: "/tmp/app"
     listen_ports: "5000:5000"
 
   tasks:
