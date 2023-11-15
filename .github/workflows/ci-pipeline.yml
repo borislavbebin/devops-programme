@@ -1,10 +1,7 @@
 name: Pytohn CI
 
 
-on:
-  push:
-    branches:
-      - sandbox
+on: [push]
 
 jobs:
   editorconfig:
