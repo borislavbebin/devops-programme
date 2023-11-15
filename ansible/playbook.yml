@@ -1,16 +1,29 @@
-name: Build, Push and Run Docker image for the Python application
-host: localhost
-become: no
+- name: Build, Push and Run Docker image for the Python application
+  hosts: localhost
+  become: no
 
-vars:
-  image_name: "bbebin/python-app"
-  image_tag: "0.3"
-  listen_port: "{{ default_listen_port | default(5000) }}"
+  vars:
+    image_name: "bbebin/python-app"
+    image_tag: "0.3"
+    app_directory: "/app"
+    listen_ports: "5000:5000"
 
-tasks:
-  - name: Create application directory
-    file:
-      path: "/app" 
-      state: directory
-      mode: 0755
+  tasks:
+    - name: Create application directory
+      file:
+        path: "{{ app_directory }}" 
+        state: directory
+        mode: 0755
+          
+    - name: Build Docker Image
+      docker_image:
+        name: "{{ image_name }}"
+        tag: "{{ image_tag }}"
+        path: "{{ app_directory }}"
 
+    - name: Run Docker Container
+      docker_container:
+        name: "python flask app"
+        image: "{{ image_name }}:{{ image_tag }}"
+        state: started
+        ports: "{{ listen_ports }}"
