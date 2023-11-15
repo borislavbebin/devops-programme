@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.X"]
+        app_directory: "./app"
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
@@ -32,7 +33,7 @@ jobs:
 
       - name: Analyzing the code with pylint
         run: |
-          pylint --rcfile='./pylintrc' $(git ls-files "{{ application_directory }}")
+          pylint --rcfile='./pylintrc' $(git ls-files ${{ matrix.app_directory }})
 
       - name: Lint with Markdown-lint
         uses: articulate/actions-markdownlint@v1
