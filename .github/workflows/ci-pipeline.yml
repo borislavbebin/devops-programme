@@ -1,10 +1,7 @@
 name: Pytohn CI
 
 
-on:
-  push:
-    branches:
-      - sandbox
+on: [push]
 
 jobs:
   editorconfig:
@@ -32,7 +29,7 @@ jobs:
 
       - name: Analyzing the code with pylint
         run: |
-          pylint --rcfile='./pylintrc' $(git ls-files './app')
+          pylint --rcfile='./.pylintrc' $(git ls-files './app')
 
       - name: Lint with Markdown-lint
         uses: articulate/actions-markdownlint@v1
@@ -43,4 +40,4 @@ jobs:
 
       - name: Execute unit-test
         run: |
-          python -m unittest './app/app_test.py'
+          python -m unittest discover -s ./app -p "*_test.py"
