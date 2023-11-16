@@ -29,7 +29,7 @@ jobs:
 
       - name: Analyzing the code with pylint
         run: |
-          pylint --rcfile='./pylintrc' $(git ls-files './app')
+          pylint --rcfile='./.pylintrc' $(git ls-files './app')
 
       - name: Lint with Markdown-lint
         uses: articulate/actions-markdownlint@v1
