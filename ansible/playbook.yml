@@ -14,7 +14,13 @@
         path: "{{ app_directory }}" 
         state: directory
         mode: 0755
-          
+    
+    - name: Git Checkout
+      git:
+        repo: git@github.com:bbebin/devops-programme
+        dest: "{{ app_directory }}"
+        version: sandbox
+
     - name: Build Docker Image
       docker_image:
         name: "{{ image_name }}"
