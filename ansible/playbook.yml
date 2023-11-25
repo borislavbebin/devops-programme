@@ -33,7 +33,7 @@
 
     - name: Run Docker Container
       docker_container:
-        name: "python flask app"
+        name: "python-flask-app"
         image: "{{ image_name }}:{{ image_tag }}"
         state: started
         ports: "{{ listen_ports }}"
