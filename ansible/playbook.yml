@@ -26,7 +26,10 @@
       docker_image:
         name: "{{ image_name }}"
         tag: "{{ image_tag }}"
-        path: "{{ app_directory }}"
+        build:
+          path: "{{ app_directory }}"
+        source: build
+        state: present
 
     - name: Run Docker Container
       docker_container:
