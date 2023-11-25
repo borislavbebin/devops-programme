@@ -3,9 +3,9 @@
   become: no
 
   vars:
-    image_name: "bbebin/python-app"
+    image_name: "facelessbob/python-app"
     image_tag: "0.3"
-    app_directory: "/tmp//app"
+    app_directory: "/tmp/app"
     listen_ports: "5000:5000"
 
   tasks:
@@ -30,6 +30,7 @@
           path: "{{ app_directory }}"
         source: build
         state: present
+        push: true
 
     - name: Run Docker Container
       docker_container:
