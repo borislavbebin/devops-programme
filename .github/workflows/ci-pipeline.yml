@@ -4,19 +4,16 @@ name: Pytohn CI
 on: [push]
 
 jobs:
-  editorconfig:
+  pipe_setup:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        python-version: ["3.X"]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ["3.X"]
 
       - name: Install dependencies
         run: |
@@ -34,13 +31,46 @@ jobs:
           chmod +x gitleaks
           sudo mv gitleaks /usr/local/bin/
 
-  pylint:
-    needs: editorconfig
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: setup
+          path: .
+
+  editorconfig:
+    needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: setup
+
+      - name: Use Artifact
+        run: |
+          # Access all downloaded files
+          ls -R setup
+
       - name: Run EditorConfig Checker
         uses: editorconfig-checker/action-editorconfig-checker@main
 
+  pylint:
+    needs: pipe_setup
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: setup
+
+      - name: Use Artifact
+        run: |
+          # Acess all downloaded artifacts
+          ls -R setup
+        
       - name: Analyzing the code with pylint
         run: |
           pylint --rcfile='./.pylintrc' $(git ls-files './app')
@@ -53,17 +83,35 @@ jobs:
           version: 0.28.1
 
   unit_test:
-    needs: editorconfig
+    needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: setup
+
+      - name: Use Artifact
+        run: |
+          ls -R setup
+
       - name: Execute unit-test
         run: |
           python -m unittest discover -s ./app -p "*_test.py"
 
   secrets_scan:
-    needs: editorconfig
+    needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          setup
+
+      - name: Use Artifact
+        runs: |
+          ls -R setup
+
       - name: Scan for Secrets
         run: gitleaks --path . --redact
 
