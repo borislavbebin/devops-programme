@@ -57,7 +57,7 @@ jobs:
           # Access all downloaded files
           pwd
           ls -R
-          ls -R $GITHUB_WORKSPACE/setup
+          ls -R $GITHUB_WORKSPACE
 
       - name: Run EditorConfig Checker
         uses: editorconfig-checker/action-editorconfig-checker@main
