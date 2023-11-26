@@ -114,7 +114,7 @@ jobs:
           ls -R setup
 
       - name: Scan for Secrets
-        run: gitleaks --path . --redact
+        runs: gitleaks --path . --redact
 
       - name: Upload gitleaks findings
         uses: actions/upload-artifact@v3
