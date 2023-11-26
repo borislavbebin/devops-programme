@@ -128,3 +128,21 @@ jobs:
           snyk test --all-projects
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [build, editconfig, pylint, unit_test, secrets_scan, sonarcloud, snyk-scan]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker secrets as env
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build docker image and push
+        run: |
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          docker build -t das_ubuntu:${{ github.sha }} .
+          docker push das_ubuntu:${{ github.sha }}
