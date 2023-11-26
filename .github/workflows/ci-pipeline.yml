@@ -100,10 +100,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up SonarCloud Scanner
+      - name: SonarCloud Scanner
         uses: sonarsource/sonarcloud-github-action@master
-        with:
-          organization: Bobby
+        env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Run SonarCloud analysis
