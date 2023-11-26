@@ -44,9 +44,8 @@ jobs:
     steps:
       - name: Set up workspace
         run: |
-          mkdir -p editconfig_job
-          mv * editconfig_job/
-        working-directory: ${{ runner.workspace }}/editconfig_job
+          mkdir -p $GITHUB_WORKSPACE/editconfig_job
+          mv * $GITHUB_WORKSPACE/editconfig_job/
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -72,9 +71,8 @@ jobs:
     steps:
       - name: Set up workspace
         run: |
-          mkdir -p pylint_job
-          mv * pylint_job
-        working-directory: ${{ runner.workspace }}/pylint_job
+          mkdir -p $GITHUB_WORKSPACE/pylint_job
+          mv * $GITHUB_WORKSPACE/pylint_job
 
       - name: Checkout code
         uses: actions/checkout@v2
