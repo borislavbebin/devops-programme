@@ -107,7 +107,7 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
-          setup
+          ls -R setup
 
       - name: Use Artifact
         run: |
