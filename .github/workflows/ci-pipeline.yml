@@ -110,11 +110,11 @@ jobs:
           setup
 
       - name: Use Artifact
-        runs: |
+        run: |
           ls -R setup
 
       - name: Scan for Secrets
-        runs: gitleaks --path . --redact
+        run: gitleaks --path . --redact
 
       - name: Upload gitleaks findings
         uses: actions/upload-artifact@v3
