@@ -91,7 +91,7 @@ jobs:
           chmod +x /usr/local/bin/gitleaks
 
       - name: Scan for Secrets
-        run: gitleaks --path . --redact
+        run: gitleaks .
 
       - name: Upload gitleaks findings
         uses: actions/upload-artifact@v3
