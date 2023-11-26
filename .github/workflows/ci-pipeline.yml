@@ -4,11 +4,24 @@ name: Pytohn CI
 on: [push]
 
 jobs:
-  pipe_setup:
+  editorconfig:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Run EditorConfig Checker
+        uses: editorconfig-checker/action-editorconfig-checker@main
+
+  pylint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -19,65 +32,9 @@ jobs:
         run: |
           # upgrade pip
           python -m pip install --upgrade pip
-          
-          # install dependencies
-          python -m pip install -r ./requirements.txt
-          
+
           # install pylint
           python -m pip install black pylint
-
-          # Install gitleaks
-          curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
-          chmod +x gitleaks
-          sudo mv gitleaks /usr/local/bin/
-
-      - name: Archive Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: setup
-          path: .
-          retention-days: 3
-
-  editorconfig:
-    needs: pipe_setup
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: setup
-
-      - name: Use Artifact
-        run: |
-          # Access all downloaded files
-          ls -R $GITHUB_WORKSPACE
-
-      - name: Run EditorConfig Checker
-        uses: editorconfig-checker/action-editorconfig-checker@main
-
-  pylint:
-    needs: pipe_setup
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: setup
-
-      - name: Use Artifact
-        run: |
-          # Acess all downloaded artifacts
-          ls -R $GITHUB_WORKSPACE
 
       - name: Analyzing the code with pylint
         run: |
@@ -91,7 +48,6 @@ jobs:
           version: 0.28.1
 
   unit_test:
-    needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -99,21 +55,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          name: setup
+          python-version: "3.X"
 
-      - name: Use Artifact
+      - name: Install dependencies
         run: |
-          ls -R $GITHUB_WORKSPACE
+          # upgrade pip
+          python -m pip install --upgrade pip
+
+          # install dependencies
+          python -m pip install -r ./requirements.txt
 
       - name: Execute unit-test
         run: |
           python -m unittest discover -s ./app -p "*_test.py"
 
   secrets_scan:
-    needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
@@ -121,14 +80,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: setup
-
-      - name: Use Artifact
-        run: |
-          ls -R $GITHUB_WORKSPACE
+      - name: Install GitLeaks
+      - run: |
+        curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+          chmod +x gitleaks
+          sudo mv gitleaks /usr/local/bin/
 
       - name: Scan for Secrets
         run: gitleaks --path . --redact
