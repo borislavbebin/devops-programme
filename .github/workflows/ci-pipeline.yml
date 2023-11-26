@@ -83,16 +83,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install GitLeaks
+      - name: Download and Install GitLeaks
         run: |
-          curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
-          chmod +x gitleaks
-          sudo mv gitleaks /usr/local/bin/
-
-      - name: Debug Output
-        run: |
-          ls -lha /usr/local/bin/
-          echo $PATH
+          curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o /usr/local/bin/gitleaks
+          chmod +x /usr/local/bin/gitleaks
 
       - name: Scan for Secrets
         run: gitleaks --path . --redact
