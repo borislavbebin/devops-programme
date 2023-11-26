@@ -141,6 +141,6 @@ jobs:
 
       - name: Build docker image and push
         run: |
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t das_ubuntu:${{ github.sha }} .
-          docker push das_ubuntu:${{ github.sha }}
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --passsword-stdin
+          docker build -t python-app:${{ github.sha }} .
+          docker push python-app:${{ github.sha }}
