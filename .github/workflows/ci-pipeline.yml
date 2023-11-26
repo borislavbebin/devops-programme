@@ -45,7 +45,7 @@ jobs:
       - name: Set up workspace
         run: |
           mkdir -p $GITHUB_WORKSPACE/editconfig_job
-        working-directory: $GITHUB_WORKSPACE/editconfig_job/
+        working-directory: $GITHUB_WORKSPACE/
 
       - name: Checkout code
         uses: actions/checkout@v2
