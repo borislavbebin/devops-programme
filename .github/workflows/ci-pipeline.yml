@@ -107,6 +107,12 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: Install SonarScanner CLI
+      run: |
+        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-<version>-linux.zip
+        unzip sonar-scanner-cli-<version>-linux.zip
+        export PATH="$PATH:$PWD/sonar-scanner-cli-<version>-linux/bin"
+
       - name: Run SonarCloud analysis
         run: sonar-scanner
 
