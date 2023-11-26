@@ -20,10 +20,24 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # upgrade pip
           python -m pip install --upgrade pip
-          python -m pip install black pylint
+          
+          # install dependencies
           python -m pip install -r ./requirements.txt
+          
+          # install pylint
+          python -m pip install black pylint
 
+          # Install gitleaks
+          curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+          chmod +x gitleaks
+          sudo mv gitleaks /usr/local/bin/
+
+  pylint:
+    needs: editorconfig
+    runs-on: ubuntu-20.04
+    steps:
       - name: Run EditorConfig Checker
         uses: editorconfig-checker/action-editorconfig-checker@main
 
@@ -38,6 +52,24 @@ jobs:
           ignore: node_modules
           version: 0.28.1
 
+  unit_test:
+    needs: editorconfig
+    runs-on: ubuntu-20.04
+    steps:
       - name: Execute unit-test
         run: |
           python -m unittest discover -s ./app -p "*_test.py"
+
+  secrets_scan:
+    needs: editorconfig
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Scan for Secrets
+        run: gitleaks --path . --redact
+
+      - name: Upload gitleaks findings
+        uses: actions/upload-artifact@v2
+        with:
+          name: gitleaks-findings
+          path: ./gitleaks-report.json
+
