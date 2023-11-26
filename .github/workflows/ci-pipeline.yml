@@ -42,6 +42,12 @@ jobs:
     needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
+      - name: Set up workspace
+        run: |
+          mkdir -p editconfig_job
+          mv * editconfig_job/
+        working-directory: ${{ runner.workspace }}/editconfig_job
+
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -64,6 +70,12 @@ jobs:
     needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
+      - name: Set up workspace
+        run: |
+          mkdir -p pylint_job
+          mv * pylint_job
+        working-directory: ${{ runner.workspace }}/pylint_job
+
       - name: Checkout code
         uses: actions/checkout@v2
         with:
