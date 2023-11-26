@@ -66,6 +66,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Download Artifact
         uses: actions/download-artifact@v3
@@ -94,6 +96,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
@@ -113,6 +118,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
