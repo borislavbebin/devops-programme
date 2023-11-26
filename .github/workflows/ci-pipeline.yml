@@ -132,6 +132,9 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     needs: [build, editorconfig, pylint, unit_test, secrets_scan, sonarcloud, snyk-scan]
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -139,13 +142,18 @@ jobs:
       - name: Build docker image
         run: docker build -t python-app:${{ github.sha }} .
 
-  docker-push:
-    runs-on: ubuntu-latest
-    needs: docker-build
-    env:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    steps:
+      - name: Trivy scan
+        run: |
+          trivy --format json --output trivy_results.json python-app:${{ github.sha }}
+
+          # if condition to have the push happen after the scan
+          if [ "$(jq '.Vulnerabilities | length' trivy_results.json)" -eq "0" ]; then
+            echo "No vulnerabilities found. Proceeding with the push."
+          else
+            echo "Vulnerabilities found. Skipping the push."
+            exit 1
+          fi
+
       - name: DockerHub login
         uses: docker/login-action@v3
         with:
