@@ -101,7 +101,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up SonarCloud Scanner
-        uses: SonarSource/sonarcloud-github-action@v3
+        uses: sonarsource/sonarcloud-github-action@master
         with:
           organization: Bobby
           token: ${{ secrets.SONAR_TOKEN }}
