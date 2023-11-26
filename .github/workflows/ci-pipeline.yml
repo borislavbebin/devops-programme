@@ -81,8 +81,8 @@ jobs:
           fetch-depth: 0
 
       - name: Install GitLeaks
-      - run: |
-        curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+        run: |
+          curl -sL https://github.com/zricethezav/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
           chmod +x gitleaks
           sudo mv gitleaks /usr/local/bin/
 
