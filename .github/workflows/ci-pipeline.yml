@@ -42,11 +42,6 @@ jobs:
     needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
-      - name: Set up workspace
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/editconfig_job
-        working-directory: $GITHUB_WORKSPACE/
-
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -69,11 +64,6 @@ jobs:
     needs: pipe_setup
     runs-on: ubuntu-20.04
     steps:
-      - name: Set up workspace
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/pylint_job
-          mv * $GITHUB_WORKSPACE/pylint_job
-
       - name: Checkout code
         uses: actions/checkout@v2
         with:
